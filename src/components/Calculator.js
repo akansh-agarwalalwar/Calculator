@@ -90,8 +90,8 @@ const Calculator = () => {
           <div onClick={handleTogglePartialView} className="bg-macColor-500 h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center cursor-pointer">
             <FaPlus size={8} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
-          <div onClick={handleToggleTheme} className={`${isDarkMode ? 'bg-macColor-500' : 'bg-white'} h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center cursor-pointer`}>
-            <FaRegMoon size={8} />
+          <div onClick={handleToggleTheme} className={`${isDarkMode ? 'bg-white' : 'bg-white'} h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center cursor-pointer`}>
+            <FaRegMoon size={8} color="black" />
           </div>
         </div>
 
