@@ -4,6 +4,7 @@ import "../index.css";
 import { RxCross2 } from "react-icons/rx";
 import { FiMinus } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
+import { FaRegMoon } from "react-icons/fa";
 
 const Calculator = () => {
   const [input, setInput] = useState("0");
@@ -12,7 +13,8 @@ const Calculator = () => {
   const [history, setHistory] = useState([]);
   const [explode, setExplode] = useState(false);
   const [isPartialView, setIsPartialView] = useState(false);
-  
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
   const handleButtonClick = (value) => {
     if (input === "0" && value !== "." && value !== "+/-" && value !== "%") {
       setInput(value);
@@ -25,16 +27,12 @@ const Calculator = () => {
     setInput("0");
   };
 
-  const handleBackspace = () => {
-    setInput(input.slice(0, -1));
-  };
-
   const handleCalculate = () => {
     try {
       const result = Function("return " + input)();
       setInput(result.toString());
       setHistory([...history, `${input} = ${result}`]);
-      if (/2[\+\-\\/]6|6[\+\-\\/]2/.test(input)) {
+      if (/2[\+\-\*\/]6|6[\+\-\*\/]2/.test(input)) {
         setExplode(true);
         setTimeout(() => setExplode(false), 3000);
       }
@@ -75,49 +73,51 @@ const Calculator = () => {
     setIsPartialView(!isPartialView);
   };
 
+  const handleToggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className={"calculator flex flex-col items-center justify-center min-h-screen"} >
-      <div className={`flex items-center justify-center flex-col bg-macColor-100 rounded-lg border border-3 border-macColor-800 relative ${isPartialView ?('w-[230px]'):("w-fit")}`}>
+    <div className={`calculator flex flex-col items-center justify-center min-h-screen ${isDarkMode ? 'bg-dark text-white' : 'bg-light text-black'}`}>
+      <div className={`flex items-center justify-center flex-col rounded-lg border border-3 relative ${isPartialView ? 'w-[230px]' : 'w-fit'} ${isDarkMode ? 'bg-macColor-100 border-macColor-800' : 'bg-lightTheme-100 border-lightTheme-100'}`}>
         <div className="flex w-full flex-row left-2 float-left top-2 relative gap-1 group">
-          <div className="bg-macColor-700 h-[10.5px] w-[10.5px] rounded-xl flex items-center justify-center">
+          <div className="bg-macColor-700 h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center">
             <RxCross2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
-          <div className="bg-macColor-600 h-[10.5px] w-[10.5px] rounded-xl flex items-center justify-center">
+          <div className="bg-macColor-600 h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center">
             <FiMinus size={8} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
-          <div onClick={handleTogglePartialView} className="bg-macColor-500 h-[10.5px] w-[10.5px] rounded-xl flex items-center justify-center cursor-pointer">
+          <div onClick={handleTogglePartialView} className="bg-macColor-500 h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center cursor-pointer">
             <FaPlus size={8} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          </div>
+          <div onClick={handleToggleTheme} className={`${isDarkMode ? 'bg-macColor-500' : 'bg-white'} h-[11.5px] w-[11.5px] rounded-xl flex items-center justify-center cursor-pointer`}>
+            <FaRegMoon size={8} />
           </div>
         </div>
 
-        <div className="display w-full text-white text-right p-4 text-3xl font-roboto">
+        <div className="display w-full text-right p-4 text-3xl font-roboto">
           {input}
         </div>
-        <div className="grid grid-cols-10 gap-[1.5px] rounded-lg">
+        <div className={`grid grid-cols-10 gap-[1.65px] rounded-lg ${isDarkMode ? 'bg-macColor-100' : ' bg-lightTheme-100'}`}>
           {isPartialView ? (
-            <div className="grid grid-cols-4 w-[225px] gap-[1px]">
-              {/* 1 */}
+            <div className={`grid grid-cols-4 w-[225px] gap-[1.65px] ml-[1.5px] ${isDarkMode ? 'bg-macColor-100' : 'bg-lightTheme-100'}`}>
               <button onClick={handleClear} className="btn">C</button>
               <button onClick={() => handleButtonClick("+/-")} className="btn">+/-</button>
               <button onClick={() => handleButtonClick("%")} className="btn">%</button>
               <button onClick={() => handleButtonClick("/")} className="btn orange">÷</button>
-              {/* 2 */}
               <button onClick={() => handleButtonClick("7")} className="btn">7</button>
               <button onClick={() => handleButtonClick("8")} className="btn">8</button>
               <button onClick={() => handleButtonClick("9")} className="btn">9</button>
               <button onClick={() => handleButtonClick("*")} className="btn orange">×</button>
-{/* 3 */}
               <button onClick={() => handleButtonClick("4")} className="btn">4</button>
               <button onClick={() => handleButtonClick("5")} className="btn">5</button>
               <button onClick={() => handleButtonClick("6")} className="btn">6</button>
               <button onClick={() => handleButtonClick("-")} className="btn orange">-</button>
-{/* 4 */}
               <button onClick={() => handleButtonClick("1")} className="btn">1</button>
               <button onClick={() => handleButtonClick("2")} className="btn">2</button>
               <button onClick={() => handleButtonClick("3")} className="btn">3</button>
               <button onClick={() => handleButtonClick("+")} className="btn orange">+</button>
-{/* 5 */}
-              <button onClick={() => handleButtonClick("0")} className="btn col-span-2">0</button>
+              <button onClick={() => handleButtonClick("0")} className="btn col-start-1 col-end-3" style={{ width: 'calc(6.93rem + 1.5px)' }}>0</button>
               <button onClick={() => handleButtonClick(".")} className="btn">.</button>
               <button onClick={handleCalculate} className="btn orange">=</button>
             </div>
@@ -169,7 +169,7 @@ const Calculator = () => {
               <button onClick={() => handleButtonClick("Math.tanh(")} className="btn">tanh</button>
               <button onClick={() => handleButtonClick("Math.PI")} className="btn">π</button>
               <button onClick={() => handleButtonClick("Math.random()")} className="btn"><span className="-ml-1">Rand</span></button>
-              <button onClick={() => handleButtonClick("0")} className="btn col-span-2">0</button>
+              <button onClick={() => handleButtonClick("0")} className="btn col-start-7 col-end-9" style={{ width: 'calc(7rem + 1.5px)' }}>0</button>
               <button onClick={() => handleButtonClick(".")} className="btn">.</button>
               <button onClick={handleCalculate} className="btn orange">=</button>
             </>
@@ -177,8 +177,8 @@ const Calculator = () => {
         </div>
         {explode && <ConfettiExplosion />}
         <div className="mt-4 w-full">
-          <h2 className="text-lg font-bold text-gray-200 ml-2">History</h2>
-          <ul className="bg-gray-700 p-2 rounded text-gray-200">
+          <h2 className="text-lg font-bold ml-2">History</h2>
+          <ul className={`p-2 rounded ${isDarkMode ? ' bg-macColor-100 text-white' : 'bg-lightTheme-100 text-white'}`}>
             {history.slice().reverse().map((entry, index) => (
               <li key={index}>{entry}</li>
             ))}
@@ -186,7 +186,6 @@ const Calculator = () => {
         </div>
       </div>
     </div>
-  
   );
 };
 

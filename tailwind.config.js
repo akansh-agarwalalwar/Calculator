@@ -17,6 +17,11 @@ module.exports = {
           700: "#FF5F57",
           800: "#777B81",
         },
+        lightTheme:{
+          100: "#95908A",
+          200: "#D5D5D5",
+          300: "#E0E0E0",
+        },
       },
       gridTemplateColumns: {
         'custom': '500px 1fr 2fr',
